@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JD — কথা বলো, দেখো, আয় করো</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Exo+2:ital,wght@0,700;0,800;0,900;1,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════ -->
+<!--  AUTH OVERLAY                          -->
+<!-- ═══════════════════════════════════════ -->
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-modal">
+    <div class="auth-logo">
+      <div class="logo-mark">JD</div>
+      <div class="brand-name">JD Social</div>
+      <div class="brand-tagline">কথা বলো · দেখো · আয় করো</div>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab('login')">লগইন</button>
+      <button class="auth-tab" onclick="switchAuthTab('register')">নিবন্ধন</button>
+    </div>
+    <div id="loginForm">
+      <div class="form-group">
+        <input type="text" class="form-input" id="loginUser" placeholder="ইমেইল বা ফোন নম্বর">
+      </div>
+      <div class="form-group">
+        <input type="password" class="form-input" id="loginPass" placeholder="পাসওয়ার্ড">
+      </div>
+      <div class="forgot-link" onclick="showToast('পাসওয়ার্ড রিসেট ইমেইল পাঠানো হয়েছে ✅')">পাসওয়ার্ড ভুলে গেছেন?</div>
+      <button class="auth-btn" onclick="doLogin()">লগইন করুন</button>
+      <div class="auth-divider"><span>অথবা</span></div>
+      <button class="social-btn phone-btn" onclick="doLogin()">📱 OTP দিয়ে লগইন</button>
+    </div>
+    <div id="registerForm" style="display:none">
+      <div class="form-group">
+        <input type="text" class="form-input" id="regName" placeholder="আপনার পূর্ণ নাম">
+      </div>
+      <div class="form-group">
+        <input type="tel" class="form-input" id="regPhone" placeholder="মোবাইল নম্বর">
+      </div>
+      <div class="form-group">
+        <input type="email" class="form-input" id="regEmail" placeholder="ইমেইল (ঐচ্ছিক)">
+      </div>
+      <div class="form-group">
+        <input type="password" class="form-input" id="regPass" placeholder="পাসওয়ার্ড">
+      </div>
+      <button class="auth-btn" onclick="doRegister()">অ্যাকাউন্ট তৈরি করুন</button>
+      <div class="terms-note">নিবন্ধন করলে আপনি আমাদের <span style="color:var(--blue)">শর্তাবলী</span> মেনে নিচ্ছেন</div>
+    </div>
+    <div class="revenue-notice">
+      <span class="rev-icon">💰</span>
+      <span>যোগ দিন এবং আয়ের <strong>৯০%</strong> পান!</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!--  SIDEBAR NAV                           -->
+<!-- ═══════════════════════════════════════ -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark-sm">JD</div>
+    <div class="sidebar-brand">
+      <span class="sb-name">JD</span>
+      <span class="sb-full">Social</span>
+    </div>
+  </div>
+
+  <div class="nav-links">
+    <a class="nav-link active" onclick="goTo('feed')" id="nl-feed">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>হোম</span>
+    </a>
+    <a class="nav-link" onclick="goTo('discover')" id="nl-discover">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <span>অন্বেষণ</span>
+    </a>
+    <a class="nav-link" onclick="openUpload()" id="nl-upload">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      <span>আপলোড</span>
+    </a>
+    <a class="nav-link" onclick="goTo('live')" id="nl-live">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 010 8.49M7.76 7.76a6 6 0 000 8.49"/><path d="M20.49 3.51a14 14 0 010 16.99M3.51 3.51a14 14 0 000 16.99"/></svg>
+      <span>লাইভ</span>
+      <span class="live-badge-nav">লাইভ</span>
+    </a>
+    <a class="nav-link" onclick="goTo('chat')" id="nl-chat">
+      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      <span>ইনবক্স</span>
+      <span class="notif-count">3</span>
+    </a>
+    <a class="nav-link" onclick="goTo('wallet')" id="nl-wallet">
+      <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+      <span>ওয়ালেট</span>
+    </a>
+    <a class="nav-link" onclick="goTo('profile')" id="nl-profile">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>প্রোফাইল</span>
+    </a>
+  </div>
+
+  <div class="sidebar-bottom">
+    <button class="upload-btn-main" onclick="openUpload()">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      ভিডিও আপলোড
+    </button>
+    <div class="user-mini" onclick="goTo('profile')">
+      <div class="user-av">আ</div>
+      <div class="user-info">
+        <div class="user-name" id="sidebarUsername">আপনার নাম</div>
+        <div class="user-handle">@username</div>
+      </div>
+      <div class="earn-mini" id="sidebarEarn">৳ ৪,২৫০</div>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════ -->
+<!--  MAIN CONTENT                          -->
+<!-- ═══════════════════════════════════════ -->
+<main class="main-content">
+
+  <!-- TOP BAR (mobile) -->
+  <div class="mobile-topbar">
+    <div class="mob-logo">
+      <div class="logo-mark-sm">JD</div>
+      <span style="font-family:'Exo 2';font-weight:800;font-size:18px;background:linear-gradient(90deg,#3b82f6,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">JD Social</span>
+    </div>
+    <div class="mob-actions">
+      <div class="mob-btn" onclick="goTo('chat')">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        <span class="mob-notif">3</span>
+      </div>
+      <div class="mob-btn" onclick="openUpload()">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FEED PAGE ── -->
+  <div class="page active" id="page-feed">
+    <div class="feed-tabs">
+      <button class="feed-tab active" onclick="switchFeedTab(this,'foryou')">আপনার জন্য</button>
+      <button class="feed-tab" onclick="switchFeedTab(this,'following')">ফলোয়িং</button>
+      <button class="feed-tab" onclick="switchFeedTab(this,'trending')">ট্রেন্ডিং</button>
+    </div>
+    <div class="video-feed" id="videoFeed"></div>
+  </div>
+
+  <!-- ── DISCOVER PAGE ── -->
+  <div class="page" id="page-discover">
+    <div class="discover-search">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="ভিডিও, মানুষ, হ্যাশট্যাগ খুঁজুন..." id="searchInput" oninput="doSearch(this.value)">
+      </div>
+    </div>
+    <div class="trending-tags" id="trendingTags"></div>
+    <div class="discover-grid" id="discoverGrid"></div>
+  </div>
+
+  <!-- ── LIVE PAGE ── -->
+  <div class="page" id="page-live">
+    <div class="live-layout">
+      <div class="live-stage-area">
+        <div class="live-screen" id="liveScreen">
+          <div class="live-pre" id="livePre">
+            <div class="live-pre-icon">📡</div>
+            <h2>লাইভ শুরু করুন</h2>
+            <p>লাইভ করুন এবং প্রতিটি গিফট থেকে ৯০% আয় করুন</p>
+            <div class="live-settings">
+              <input type="text" class="live-title-input" id="liveTitleInput" placeholder="লাইভের শিরোনাম লিখুন...">
+            </div>
+            <button class="go-live-btn" onclick="startLive()">🔴 লাইভ শুরু করুন</button>
+            <button class="watch-live-btn" onclick="watchLive()">📺 অন্যের লাইভ দেখুন</button>
+          </div>
+          <div class="live-active" id="liveActive" style="display:none">
+            <div class="live-video-bg">
+              <div class="live-camera-icon">🎥</div>
+              <div class="live-title-bar" id="liveTitleBar"></div>
+            </div>
+            <div class="live-overlay-top">
+              <div class="live-info-left">
+                <div class="live-host-av">আ</div>
+                <div>
+                  <div class="live-host-name" id="liveHostName">আপনার নাম</div>
+                  <div class="live-red-pill"><span class="live-dot"></span>লাইভ</div>
+                </div>
+              </div>
+              <div class="live-info-right">
+                <div class="live-viewers">👁 <span id="liveViewerCount">0</span></div>
+                <button class="end-live-btn" onclick="endLive()">শেষ করুন</button>
+              </div>
+            </div>
+            <div class="live-overlay-bottom">
+              <div class="live-earn-bar">💰 লাইভ আয়: <strong id="liveEarnDisplay">৳ ০.০০</strong></div>
+              <div class="live-comments-scroll" id="liveCommentsScroll"></div>
+              <div class="live-input-row">
+                <input type="text" class="live-comment-input" id="liveCommentInput" placeholder="কমেন্ট করুন..." onkeydown="if(event.key==='Enter')sendLiveComment()">
+                <button class="live-gift-btn" onclick="sendGift()">🎁</button>
+                <button class="live-mic-btn" id="liveMicBtn" onclick="toggleMic()">🎤</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="live-list-panel">
+        <div class="live-list-title">চলমান লাইভ</div>
+        <div class="live-list" id="liveList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CHAT PAGE ── -->
+  <div class="page" id="page-chat">
+    <div class="chat-layout">
+      <div class="chat-sidebar">
+        <div class="chat-search">
+          <input type="text" placeholder="চ্যাট খুঁজুন..." oninput="filterChats(this.value)">
+        </div>
+        <div class="chat-list-container" id="chatListContainer"></div>
+        <button class="new-chat-btn" onclick="showToast('নতুন চ্যাট শুরু হচ্ছে...')">+ নতুন চ্যাট</button>
+      </div>
+      <div class="chat-main" id="chatMain">
+        <div class="chat-empty-state">
+          <div style="font-size:48px;margin-bottom:12px;">💬</div>
+          <div style="font-size:16px;font-weight:600;margin-bottom:6px;">একটি চ্যাট বেছে নিন</div>
+          <div style="font-size:13px;color:var(--muted)">বাম পাশ থেকে কাউকে বেছে নিন</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── WALLET PAGE ── -->
+  <div class="page" id="page-wallet">
+    <div class="wallet-page">
+      <div class="wallet-hero-card">
+        <div class="w-bg-deco"></div>
+        <div class="w-label">মোট ব্যালেন্স</div>
+        <div class="w-amount">৳ <span id="walletAmount">৪,২৫০</span><small>.৭৫</small></div>
+        <div class="w-month-earn">এই মাসে: ৳ ১,৮৪০.২০ আয়</div>
+        <div class="w-actions">
+          <button class="w-btn-main" onclick="openWithdrawModal()">💸 উত্তোলন</button>
+          <button class="w-btn-sec" onclick="showToast('লেনদেন লোড হচ্ছে...')">📋 ইতিহাস</button>
+          <button class="w-btn-sec" onclick="showToast('রেফারেল লিংক কপি হয়েছে! 🔗')">🔗 রেফার</button>
+        </div>
+      </div>
+
+      <div class="rev-share-banner">
+        <div class="rev-pct-big">৯০%</div>
+        <div class="rev-share-text">
+          <div class="rev-share-title">আপনার আয়, আপনার টাকা</div>
+          <div class="rev-share-sub">প্রতিটি ভিউ, লাইক, শেয়ার থেকে আয়ের ৯০% সরাসরি এই ওয়ালেটে জমা হয়।</div>
+        </div>
+      </div>
+
+      <div class="wallet-stats">
+        <div class="w-stat"><div class="w-stat-v" style="color:var(--blue)">১২,৩৪৫</div><div class="w-stat-l">মোট ভিউ</div></div>
+        <div class="w-stat"><div class="w-stat-v" style="color:var(--green)">৳ ৮,৫২০</div><div class="w-stat-l">মোট আয়</div></div>
+        <div class="w-stat"><div class="w-stat-v" style="color:var(--cyan)">৮ জন</div><div class="w-stat-l">রেফারেল</div></div>
+      </div>
+
+      <div class="tx-section">
+        <div class="tx-title">সাম্প্রতিক লেনদেন</div>
+        <div class="tx-list" id="txList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PROFILE PAGE ── -->
+  <div class="page" id="page-profile">
+    <div class="profile-page">
+      <div class="profile-cover"></div>
+      <div class="profile-info">
+        <div class="profile-av-wrap">
+          <div class="profile-av" id="profileAv">আ</div>
+          <div class="profile-verified">✓</div>
+        </div>
+        <div class="profile-name" id="profileName">আপনার নাম</div>
+        <div class="profile-handle" id="profileHandle">@username</div>
+        <div class="profile-bio">JD Social-এ আমার কন্টেন্ট দেখুন এবং আমাকে ফলো করুন! 🔥</div>
+        <div class="profile-stats">
+          <div class="p-stat"><div class="p-stat-v">৪৫</div><div class="p-stat-l">ভিডিও</div></div>
+          <div class="p-stat"><div class="p-stat-v">১.২K</div><div class="p-stat-l">ফলোয়ার</div></div>
+          <div class="p-stat"><div class="p-stat-v">৩৪০</div><div class="p-stat-l">ফলো করছেন</div></div>
+          <div class="p-stat"><div class="p-stat-v" style="color:var(--green)">৳৪,২৫০</div><div class="p-stat-l">মোট আয়</div></div>
+        </div>
+        <div class="profile-actions">
+          <button class="p-edit-btn" onclick="openEditProfile()">✏️ প্রোফাইল সম্পাদনা</button>
+          <button class="p-share-btn" onclick="showToast('প্রোফাইল লিংক কপি হয়েছে!')">🔗 শেয়ার</button>
+        </div>
+      </div>
+      <div class="profile-tabs">
+        <button class="p-tab active" onclick="switchProfileTab(this,'videos')">ভিডিও</button>
+        <button class="p-tab" onclick="switchProfileTab(this,'liked')">পছন্দ করা</button>
+        <button class="p-tab" onclick="switchProfileTab(this,'saved')">সেভ করা</button>
+      </div>
+      <div class="profile-grid" id="profileGrid"></div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ═══════════════════════════════════════ -->
+<!--  MOBILE BOTTOM NAV                     -->
+<!-- ═══════════════════════════════════════ -->
+<nav class="mobile-bottom-nav">
+  <button class="mob-nav-btn active" onclick="goTo('feed')" id="mbn-feed">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>হোম</span>
+  </button>
+  <button class="mob-nav-btn" onclick="goTo('discover')" id="mbn-discover">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <span>খুঁজুন</span>
+  </button>
+  <button class="mob-nav-btn center-btn" onclick="openUpload()">
+    <div class="center-plus">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </div>
+  </button>
+  <button class="mob-nav-btn" onclick="goTo('live')" id="mbn-live">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 010 8.49M7.76 7.76a6 6 0 000 8.49"/></svg>
+    <span>লাইভ</span>
+  </button>
+  <button class="mob-nav-btn" onclick="goTo('profile')" id="mbn-profile">
+    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span>প্রোফাইল</span>
+  </button>
+</nav>
+
+<!-- ═══════════════════════════════════════ -->
+<!--  UPLOAD MODAL                          -->
+<!-- ═══════════════════════════════════════ -->
+<div class="modal-overlay" id="uploadModal">
+  <div class="modal-box upload-modal-box">
+    <div class="modal-header">
+      <div class="modal-title">ভিডিও আপলোড</div>
+      <button class="modal-close" onclick="closeModal('uploadModal')">✕</button>
+    </div>
+    <div class="upload-drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+      <div class="upload-icon-big">📹</div>
+      <div class="upload-drop-text">ভিডিও টেনে আনুন বা ক্লিক করুন</div>
+      <div class="upload-drop-sub">MP4, MOV, AVI সাপোর্টেড · সর্বোচ্চ ৫০০MB</div>
+      <input type="file" id="fileInput" accept="video/*" style="display:none" onchange="handleFileSelect(this)">
+    </div>
+    <div class="upload-form" id="uploadForm" style="display:none">
+      <input type="text" class="form-input" id="videoTitle" placeholder="ভিডিওর শিরোনাম">
+      <textarea class="form-input" id="videoDesc" rows="3" placeholder="বিবরণ লিখুন... #হ্যাশট্যাগ যোগ করুন"></textarea>
+      <div class="upload-options">
+        <label class="toggle-label">
+          <input type="checkbox" checked> সকলে দেখতে পাবে
+        </label>
+        <label class="toggle-label">
+          <input type="checkbox" checked> মন্তব্য অনুমতি
+        </label>
+      </div>
+      <div class="upload-progress" id="uploadProgress" style="display:none">
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-text" id="progressText">আপলোড হচ্ছে...</div>
+      </div>
+      <button class="auth-btn" onclick="submitUpload()">✅ পোস্ট করুন</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!--  WITHDRAW MODAL                        -->
+<!-- ═══════════════════════════════════════ -->
+<div class="modal-overlay" id="withdrawModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">💰 টাকা উত্তোলন</div>
+      <button class="modal-close" onclick="closeModal('withdrawModal')">✕</button>
+    </div>
+    <div class="bal-display">উপলব্ধ: <strong id="modalBal">৳ ৪,২৫০.৭৫</strong></div>
+    <div class="method-pills">
+      <button class="method-pill active" id="mp-bkash" onclick="selPay('bkash')">bKash</button>
+      <button class="method-pill" id="mp-nagad" onclick="selPay('nagad')">Nagad</button>
+      <button class="method-pill" id="mp-rocket" onclick="selPay('rocket')">Rocket</button>
+      <button class="method-pill" id="mp-bank" onclick="selPay('bank')">ব্যাংক</button>
+    </div>
+    <input type="number" class="form-input" id="withdrawAmt" placeholder="পরিমাণ (৳)" oninput="calcWithdraw()" min="100">
+    <input type="text" class="form-input" id="withdrawAcct" placeholder="মোবাইল/অ্যাকাউন্ট নম্বর" style="margin-top:10px">
+    <div class="fee-breakdown">
+      <div class="fee-row"><span>পরিমাণ</span><span id="fDisplay">৳ ০.০০</span></div>
+      <div class="fee-row"><span>সার্ভিস চার্জ (১.৫%)</span><span id="fCharge" style="color:#f97316">- ৳ ০.০০</span></div>
+      <div class="fee-divider"></div>
+      <div class="fee-row" style="font-weight:700"><span>আপনি পাবেন</span><span id="fGet" style="color:#22c55e">৳ ০.০০</span></div>
+    </div>
+    <div class="quick-amounts">
+      <button onclick="setWithdrawAmt(200)">৳২০০</button>
+      <button onclick="setWithdrawAmt(500)">৳৫০০</button>
+      <button onclick="setWithdrawAmt(1000)">৳১০০০</button>
+      <button onclick="setWithdrawAmt(2500)">৳২৫০০</button>
+    </div>
+    <button class="auth-btn" id="confirmWithdrawBtn" onclick="confirmWithdraw()">উত্তোলন নিশ্চিত করুন</button>
+    <div class="withdraw-success" id="withdrawSuccess" style="display:none">
+      <div style="font-size:36px">✅</div>
+      <div style="font-weight:700;color:#22c55e;font-size:16px;margin:8px 0">সফলভাবে উত্তোলন হয়েছে!</div>
+      <div id="withdrawTxId" style="font-size:12px;color:var(--muted)"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!--  VIDEO PLAYER MODAL                    -->
+<!-- ═══════════════════════════════════════ -->
+<div class="modal-overlay video-modal-overlay" id="videoPlayerModal">
+  <div class="video-player-wrap">
+    <button class="vp-close" onclick="closeModal('videoPlayerModal')">✕</button>
+    <div class="vp-screen">
+      <div class="vp-bg" id="vpBg"></div>
+      <div class="vp-center">
+        <div class="vp-play-btn" id="vpPlayBtn" onclick="toggleVideoPlay()">▶</div>
+      </div>
+      <div class="vp-info-overlay">
+        <div class="vp-user">
+          <div class="vp-av" id="vpAv"></div>
+          <div>
+            <div class="vp-username" id="vpUsername"></div>
+            <button class="vp-follow-btn" onclick="toggleFollow(this)">ফলো করুন</button>
+          </div>
+        </div>
+        <div class="vp-title" id="vpTitle"></div>
+        <div class="vp-tags" id="vpTags"></div>
+      </div>
+      <div class="vp-actions">
+        <div class="vp-action" onclick="toggleVPLike(this)">
+          <div class="vpa-icon">❤️</div>
+          <div class="vpa-count" id="vpLikeCount">0</div>
+        </div>
+        <div class="vp-action" onclick="showToast('কমেন্ট সেকশন খুলছে...')">
+          <div class="vpa-icon">💬</div>
+          <div class="vpa-count" id="vpCommentCount">0</div>
+        </div>
+        <div class="vp-action" onclick="showToast('শেয়ার লিংক কপি হয়েছে! 🔗')">
+          <div class="vpa-icon">↗️</div>
+          <div class="vpa-count">শেয়ার</div>
+        </div>
+        <div class="vp-action" onclick="showToast('সেভ হয়েছে! ⭐')">
+          <div class="vpa-icon">⭐</div>
+          <div class="vpa-count">সেভ</div>
+        </div>
+        <div class="vp-action" onclick="showToast('রিপোর্ট করা হয়েছে')">
+          <div class="vpa-icon">⚑</div>
+          <div class="vpa-count">রিপোর্ট</div>
+        </div>
+      </div>
+    </div>
+    <div class="vp-comments-panel">
+      <div class="vp-comments-title">মন্তব্য</div>
+      <div class="vp-comments-list" id="vpCommentsList"></div>
+      <div class="vp-comment-input-row">
+        <input type="text" class="vp-comment-input" id="vpCommentInput" placeholder="মন্তব্য লিখুন..." onkeydown="if(event.key==='Enter')addVPComment()">
+        <button onclick="addVPComment()">পাঠান</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT PROFILE MODAL -->
+<div class="modal-overlay" id="editProfileModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">✏️ প্রোফাইল সম্পাদনা</div>
+      <button class="modal-close" onclick="closeModal('editProfileModal')">✕</button>
+    </div>
+    <div class="edit-av-section">
+      <div class="edit-av" id="editAv">আ</div>
+      <button onclick="showToast('ফটো আপলোড হচ্ছে...')" class="change-photo-btn">ছবি পরিবর্তন করুন</button>
+    </div>
+    <input type="text" class="form-input" id="editName" placeholder="নাম">
+    <input type="text" class="form-input" id="editUsername" placeholder="ইউজারনেম" style="margin-top:10px">
+    <textarea class="form-input" id="editBio" rows="3" placeholder="বায়ো লিখুন..." style="margin-top:10px"></textarea>
+    <button class="auth-btn" onclick="saveProfile()" style="margin-top:14px">✅ সংরক্ষণ করুন</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
